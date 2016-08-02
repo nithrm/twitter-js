@@ -1,30 +1,21 @@
 var express = require('express');
+var swig = require('swig');
+var routes = require('./routes/');
 var app = express();
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+swig.setDefaults({ cache: false });
+
+app.use('/', routes);
+
+app.use(express.static('public'));
+
 
 app.use(function(req,res,next){
   process.stdout.write(req.method + ' ' + req.originalUrl + ' ');
   next();
 
-});
-
-app.use('/special', function(req,res,next){
-  console.log('you have reached the special area');
-  next();
-})
-
-app.get('/', function(req, res){
-  logStatus(200);
-  res.send('Welcome to our webpage');
-});
-
-app.get('/special', function(req,res){
-  logStatus(200);
-  res.send('special');
-})
-
-app.get('/news', function(req, res){
-  logStatus(200);
-  res.send('news');
 });
 
 app.use(function(req,res,next){
